@@ -32,7 +32,7 @@ public class Game extends Thread {
 	private String musicTitle;
 	private Music gameMusic;
 	
-	ArrayList<Note> noteList = new ArrayList<Note>();
+	ArrayList<Not> noteList = new ArrayList<Not>();
 	
 	
 	public Game(String titleName, String difficulty, String musicTitle) {
@@ -40,7 +40,6 @@ public class Game extends Thread {
 		this.difficulty = difficulty;
 		this.musicTitle = musicTitle;
 		gameMusic = new Music(this.musicTitle, false);
-		gameMusic.start();
 	}
 	
 	public void screenDraw(Graphics2D g) {
@@ -82,10 +81,14 @@ public class Game extends Thread {
 		g.drawImage(notRouteBigLineImage, 1115, 30, null);
 		g.drawImage(notRouteBigLineImage, 1125, 30, null);
 		
-		
 		g.drawImage(gameInfoImage, 0, 665, null);
 		g.drawImage(judgementLineImage, -10, 610, null);
 		g.drawString(titleName, 20, 702);
+		for(int i = 0; i < noteList.size(); i++)
+		{
+			Not not = noteList.get(i);
+			not.screenDraw(g);
+		}
 	}
 	
 	public void pressA() {
@@ -171,7 +174,7 @@ public class Game extends Thread {
 	
 	@Override
 	public void run() {
-		
+		dropNots();
 	}
 	
 	public void close() {
@@ -179,4 +182,55 @@ public class Game extends Thread {
 		this.interrupt();
 	}
 	
+	public void dropNots() {
+		Beat[] beats = null;
+		if(titleName.equals("MightyLove")) {
+			int startTime = 4460 - Main.REACH_TIME * 1000;
+			int gap = 125;
+			beats = new Beat[] {
+					new Beat(startTime, "Space"),
+			};
+		}
+		else if (titleName.equals("WildFlower")) {
+			int startTime = 1000;
+			beats = new Beat[] { 
+					new Beat(startTime, "Space"),
+			};
+		}
+		else if (titleName.equals("Energy")) {
+			int startTime = 1000;
+			beats = new Beat[] {
+					new Beat(startTime, "Space"),
+			};
+		}
+		int i = 0;
+		gameMusic.start();
+		while(i < beats.length && !isInterrupted()) {
+			boolean dropped = false;
+			if(beats[i].getTime() <= gameMusic.getTime()) {
+				Not not = new Not(beats[i].getNotName());
+				not.start();
+				noteList.add(not);
+				i++;
+			}
+			if(!dropped) {
+				try {
+					Thread.sleep(5);;
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
 }
+
+
+
+
+
+
+
+
+
+
+

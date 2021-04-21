@@ -74,6 +74,14 @@ public class DynamicBeat extends JFrame {
 	public static Game game;
 	
 	public DynamicBeat() {
+		
+		trackList.add(new Track("MightyLoveText.png", "back1.jpg", "back1-1.jpg", 
+				"MightyLoveSelected.mp3","MightyLove.mp3", "Joakim Karud - Mighty Love"));
+		trackList.add(new Track("WildFlowerText.png", "back2.jpg", "back2-1.jpg", 
+				"WildFlowerSelected.mp3","WildFlower.mp3", "Joakim Karud - Wildflower"));
+		trackList.add(new Track("EnergyText.png", "back3.jpg", "back3-1.jpg", 
+				"EnergySelected.mp3","Energy.mp3", "Bensound - Energy"));
+		
 		setUndecorated(true);
 		setTitle("Dynamic Beat");
 		setSize(Main.SCREEN_WIDTH, Main.SCREEN_HEIGHT);
@@ -87,14 +95,7 @@ public class DynamicBeat extends JFrame {
 		addKeyListener(new KeyListener());
 		
 		introMusic.start();
-		
-		trackList.add(new Track("MightyLoveText.png", "back1.jpg", "back1-1.jpg", 
-				"MightyLoveSelected.mp3","MightyLove.mp3", "Joakim Karud - Mighty Love"));
-		trackList.add(new Track("WildFlowerText.png", "back2.jpg", "back2-1.jpg", 
-				"WildFlowerSelected.mp3","WildFlower.mp3", "Joakim Karud - Wildflower"));
-		trackList.add(new Track("EnergyText.png", "back3.jpg", "back3-1.jpg", 
-				"EnergySelected.mp3","Energy.mp3", "Bensound - Energy"));
-		
+
 		exitButton.setBounds(1220, 0, 62, 40);
 		exitButton.setBorderPainted(false);
 		exitButton.setContentAreaFilled(false);
@@ -363,6 +364,12 @@ public class DynamicBeat extends JFrame {
 			game.screenDraw(g);
 		}
 		paintComponents(g);
+		try {
+			Thread.sleep(5);
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		
 		this.repaint();
 	}
 	
@@ -402,9 +409,11 @@ public class DynamicBeat extends JFrame {
 		background = new ImageIcon(Main.class.getResource("../images/" + trackList.get(nowSelected).getGameImage())).getImage();
 		backButton.setVisible(true);
 		isGameScreen = true;
-		setFocusable(true);
 		requestFocus();
 		game = new Game(trackList.get(nowSelected).getTitleName(), difficulty, trackList.get(nowSelected).getGameMusic());
+		game.start();
+		setFocusable(true);
+
 	}
 	
 	public void backMain() {
